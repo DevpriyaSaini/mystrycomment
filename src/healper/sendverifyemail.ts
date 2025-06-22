@@ -16,10 +16,11 @@ export async function sendverification(
     try {
         
 
-const resend = new Resend('re_123456789');
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 
 await resend.emails.send({
-  from: 'onboarding@resend.dev',
+ from: 'Mystry Message <onboarding@resend.dev>',
   to: email,
   subject: ' Mystry Message verification code',
   react: VerificationEmail({username,otp:verifycode})

@@ -41,7 +41,10 @@ const userschema :Schema<User>=new Schema({
         type:String,
         required:[true,"email is required"],
         unique:true,
-        match:[/.+\@+\..+/,"please use a valid email"]
+       match: [
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // Robust email regex
+      'Please use a valid email address (e.g., user@example.com)'
+    ]
     },
     password:{
         type:String,
