@@ -9,9 +9,15 @@ export async function POST(request:Request) {
     try {
 
         const {username,code}=await request.json();
+     
+        
 
-       const decodeuser= decodeURIComponent(username);
-      const user= await usermodel.findOne({username:decodeuser});
+      //  const decodeuser= decodeURIComponent(username);
+       
+       
+      const user= await usermodel.findOne({username});
+      console.log("user from mongo",user);
+      
       if(!user){
         return Response.json({
             success:false,

@@ -37,7 +37,16 @@ export  async function GET(request:Request){
          );
         }
         const { username } = result.data;
-        const existverifieduser= await usermodel.findOne({username,isVerified:true});
+        
+        
+        const existverifieduser = await usermodel.findOne({
+            username: username, // exact match
+            isVerified: true
+             }).exec();
+
+        console.log("Searching for:", username);
+        console.log("Found user:", existverifieduser);
+        
          if (existverifieduser) {
       return Response.json(
         {
