@@ -32,7 +32,7 @@ function page() {
     const fetchAcceptMessages = useCallback(async () => {
     setIsswitch(true);
     try {
-      const response = await axios.get<Apiresponse>('/api/accept-messages');
+      const response = await axios.get<Apiresponse>('/api/accept-mess');
       setValue('acceptmessa', response.data.isAcceptingMess);
     } catch (error) {
       const axiosError = error as AxiosError<Apiresponse>;
@@ -48,7 +48,7 @@ function page() {
       setLoading(true);
       setIsswitch(false);
       try {
-        const response = await axios.get<Apiresponse>('/api/get-messages');
+        const response = await axios.get<Apiresponse>('/api/get-mess');
         setMessage(response.data.messages || []);
         if (refresh) {
           toast('Showing latest messages');
@@ -75,7 +75,7 @@ function page() {
   //handle switch
  const handleSwitchChange = async () => {
     try {
-      const response = await axios.post<Apiresponse>('/api/accept-messages', {
+      const response = await axios.post<Apiresponse>('/api/accept-mess', {
         acceptMessages: !acceptMessages,
       });
       setValue('acceptmessa', !acceptMessages);
