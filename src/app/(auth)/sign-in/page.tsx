@@ -41,6 +41,8 @@ const onSubmit = async (data: z.infer<typeof signinveri>) => {
       identifier: data.identifier,
       password: data.password,
     });
+    console.log("result signin",result);
+    
 
     if (result?.error) {
       if (result.error === 'CredentialsSignin') {
@@ -50,8 +52,11 @@ const onSubmit = async (data: z.infer<typeof signinveri>) => {
       }
     }
 
+  console.log('Document cookie:', document.cookie);
     if (result?.url) {
-      router.replace('/dashboard');
+       toast('signIn successfully');
+      console.log("login sucess");
+      router.push('/');
     }
   };
 
