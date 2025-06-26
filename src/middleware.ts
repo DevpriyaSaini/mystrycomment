@@ -13,8 +13,8 @@ const token = await getToken({
 });
   const url = request.nextUrl;
 
-  console.log("token",token);
-  console.log("url",url);
+ 
+ 
   
   
 

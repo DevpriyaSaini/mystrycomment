@@ -1,7 +1,7 @@
 import { message } from "@/model/User";
 export interface Apiresponse{
     success:boolean;
-    message:string;
+    messages:string;
    isAcceptingMess?:any;
-    messages?:Array<message>;
+    message?:any;
 }

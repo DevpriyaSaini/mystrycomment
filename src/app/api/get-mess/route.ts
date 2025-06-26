@@ -3,9 +3,10 @@ import usermodel from "@/model/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 import{User}from "next-auth"
+import mongoose from "mongoose";
 
 export async function GET(request: Request) {
-  connectiondb();
+ await connectiondb();
       const session=await getServerSession(authOptions)
      const user:User=session?.user as User
   
@@ -15,15 +16,19 @@ export async function GET(request: Request) {
               message:"Not Authenticated"
           },{status:400})
      }
-     const userId=user._id;
-     const {acceptMessages} =await request.json();
+    
+      
+      const userId = new mongoose.Types.ObjectId(user._id);
+      console.log(userId);
   try {
     const user = await usermodel.aggregate([
       { $match: { _id: userId } },
-      { $unwind: '$messages' },
-      { $sort: { 'messages.createdAt': -1 } },
-      { $group: { _id: '$_id', messages: { $push: '$messages' } } },
+      { $unwind: '$message' },
+      { $sort: { 'message.createdAt': -1 } },
+      { $group: { _id: '$_id', message: { $push: '$message' } } },
     ]).exec();
+    console.log(user);
+    
 
     if (!user || user.length === 0) {
       return Response.json(
@@ -33,7 +38,7 @@ export async function GET(request: Request) {
     }
 
     return Response.json(
-      { messages: user[0].messages },
+      { message: user[0].message },
       {
         status: 200,
       }

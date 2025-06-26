@@ -25,6 +25,9 @@ function page() {
   const {data:session}=useSession();
   const form = useForm({
     resolver: zodResolver(acceptmessage),
+    defaultValues: {
+    acceptmessa: false // Initialize with default value
+  }
   });
    const { register, watch, setValue } = form;
    const acceptMessages = watch('acceptmessa');
@@ -33,6 +36,8 @@ function page() {
     setIsswitch(true);
     try {
       const response = await axios.get<Apiresponse>('/api/accept-mess');
+      
+      
       setValue('acceptmessa', response.data.isAcceptingMess);
     } catch (error) {
       const axiosError = error as AxiosError<Apiresponse>;
@@ -49,20 +54,27 @@ function page() {
       setIsswitch(false);
       try {
         const response = await axios.get<Apiresponse>('/api/get-mess');
-        setMessage(response.data.messages || []);
+
+        
+        setMessage(response.data.message);
+   
         if (refresh) {
           toast('Showing latest messages');
         }
       } catch (error) {
         const axiosError = error as AxiosError<Apiresponse>;
-        toast( axiosError.response?.data.message ?? 'Failed to fetch messages');
+        toast( axiosError.response?.data.messages ?? 'Failed to fetch messages');
       } finally {
         setLoading(false);
         setIsswitch(false);
       }
     },
     [setLoading, setMessage, toast]
+  
+    
   );
+ 
+  
 
  useEffect(() => {
     if (!session || !session.user) return;
@@ -71,6 +83,7 @@ function page() {
 
     fetchAcceptMessages();
   }, [session, setValue, toast, fetchAcceptMessages, fetchMessages]);
+  
 
   //handle switch
  const handleSwitchChange = async () => {
@@ -149,10 +162,10 @@ function page() {
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         {messages.length > 0 ? (
-          messages.map((message, index) => (
+          messages.map((mess, index) => (
             <Messcard
-              key={message._id}
-              message={message}
+              key={mess._id}
+              message={mess}
               onMessageDelete={handleDelete}
             />
           ))

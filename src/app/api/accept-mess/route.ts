@@ -6,35 +6,41 @@ import{User}from "next-auth"
 
 
 export async function POST(request:Request) {
-    connectiondb();
+     await connectiondb();
     const session=await getServerSession(authOptions)
-   const user:User=session?.user as User
+  const user: User = session?.user as User;
 
    if(!session||!session.user){
     return Response.json({
             success:false,
             message:"Not Authenticated"
-        },{status:400})
+        },{status:401})
    }
    const userId=user._id;
-   const {acceptMessages} =await request.json();
+    const { acceptMessages } = await request.json();
    try {
    const updateduser= await usermodel.findByIdAndUpdate(userId,{
         isAcceptingMess:acceptMessages
     },{new:true})
 
-    if(!updateduser){
-         return Response.json({
-            success:false,
-            message:"message acceptance status updated successfully",
-            updateduser
-        },{status:200})
+   if (!updateduser) {
+      // User not found
+      return Response.json(
+        {
+          success: false,
+          message: 'Unable to find user to update message acceptance status',
+        },
+        { status: 404 }
+      );
     }
-
-     return Response.json({
-            success:true,
-            message:"failed to update user status "
-        },{status:500})
+    return Response.json(
+      {
+        success: true,
+        message: 'Message acceptance status updated successfully',
+        updateduser,
+      },
+      { status: 200 }
+    );
 
 
    } catch (error) {
